@@ -31,16 +31,18 @@ namespace F1Manager.App
                 Console.WriteLine("0. Kilépés");
                 
                 Console.Write("\nVálasztás: ");
-                string choice = Console.ReadLine();
+                
+                // Console.ReadKey(true) azonnal visszaadja a billentyűt Enter nélkül
+                char choice = Console.ReadKey(true).KeyChar;
 
                 switch (choice)
                 {
-                    case "1": ui.DriverMenu(); break;
-                    case "2": ui.TeamMenu(); break;
-                    case "3": ui.ChampionshipMenu(); break;
-                    case "4": ui.ResultMenu(); break;
-                    case "5": storage.SaveAll(); break;
-                    case "0": exit = true; storage.SaveAll(); break;
+                    case '1': ui.DriverMenu(); break;
+                    case '2': ui.TeamMenu(); break;
+                    case '3': ui.ChampionshipMenu(); break;
+                    case '4': ui.ResultMenu(); break;
+                    case '5': storage.SaveAll(); Console.WriteLine("\nMentve!"); Thread.Sleep(500); break;
+                    case '0': exit = true; storage.SaveAll(); break;
                 }
             }
         }

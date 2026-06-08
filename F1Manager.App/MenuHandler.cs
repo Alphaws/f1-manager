@@ -127,13 +127,13 @@ namespace F1Manager.App
                 DrawTable(headers, rows);
                 
                 Console.WriteLine("\n[A] Új | [M] Módosítás | [T] Törlés | [V] Vissza");
-                Console.Write("\nParancs: ");
                 
-                string cmd = Console.ReadLine()?.ToUpper();
-                if (cmd == "V") back = true;
-                else if (cmd == "A") AddDriver();
-                else if (cmd == "M") UpdateDriver();
-                else if (cmd == "T") DeleteDriver();
+                // Azonnali válasz billentyűleütésre
+                char cmd = char.ToUpper(Console.ReadKey(true).KeyChar);
+                if (cmd == 'V') back = true;
+                else if (cmd == 'A') AddDriver();
+                else if (cmd == 'M') UpdateDriver();
+                else if (cmd == 'T') DeleteDriver();
             }
         }
 
@@ -161,13 +161,12 @@ namespace F1Manager.App
                 }
                 
                 Console.WriteLine("\n[A] Új csapat | [H] Versenyző hozzáadása | [T] Törlés | [V] Vissza");
-                Console.Write("\nParancs: ");
                 
-                string cmd = Console.ReadLine()?.ToUpper();
-                if (cmd == "V") back = true;
-                else if (cmd == "A") AddTeam();
-                else if (cmd == "H") AssignDriverToTeam();
-                else if (cmd == "T") DeleteTeam();
+                char cmd = char.ToUpper(Console.ReadKey(true).KeyChar);
+                if (cmd == 'V') back = true;
+                else if (cmd == 'A') AddTeam();
+                else if (cmd == 'H') AssignDriverToTeam();
+                else if (cmd == 'T') DeleteTeam();
             }
         }
 
@@ -187,11 +186,10 @@ namespace F1Manager.App
                 DrawTable(headers, rows);
                 
                 Console.WriteLine("\n[A] Új szezon | [V] Vissza");
-                Console.Write("\nParancs: ");
                 
-                string cmd = Console.ReadLine()?.ToUpper();
-                if (cmd == "V") back = true;
-                else if (cmd == "A") AddChampionship();
+                char cmd = char.ToUpper(Console.ReadKey(true).KeyChar);
+                if (cmd == 'V') back = true;
+                else if (cmd == 'A') AddChampionship();
             }
         }
 
@@ -211,11 +209,10 @@ namespace F1Manager.App
                 DrawTable(headers, rows);
                 
                 Console.WriteLine("\n[A] Új eredmény rögzítése | [V] Vissza");
-                Console.Write("\nParancs: ");
                 
-                string cmd = Console.ReadLine()?.ToUpper();
-                if (cmd == "V") back = true;
-                else if (cmd == "A") AddResult();
+                char cmd = char.ToUpper(Console.ReadKey(true).KeyChar);
+                if (cmd == 'V') back = true;
+                else if (cmd == 'A') AddResult();
             }
         }
 
