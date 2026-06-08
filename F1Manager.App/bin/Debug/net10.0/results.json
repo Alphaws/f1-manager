@@ -1,0 +1,13 @@
+[
+  {
+    "Guid": "r1-bahrain",
+    "BajnoksagGuid": "c1-2026",
+    "FutamNeve": "Bahrain Grand Prix",
+    "Datum": "2026-03-15T14:00:00",
+    "Helyezesek": [
+      { "VersenyzoGuid": "d2-verstappen", "Helyezes": 1, "SzerzettPont": 25 },
+      { "VersenyzoGuid": "d1-hamilton", "Helyezes": 2, "SzerzettPont": 18 },
+      { "VersenyzoGuid": "d3-leclerc", "Helyezes": 3, "SzerzettPont": 15 }
+    ]
+  }
+]
