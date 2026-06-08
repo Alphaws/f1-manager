@@ -7,8 +7,9 @@ namespace F1Manager.Logic
 {
     /// <summary>
     /// Az adatok fájlrendszerbe való mentéséért és betöltéséért felelős osztály.
+    /// SOLID - SRP: Csak az adatperzisztenciáért felel.
     /// </summary>
-    public class StorageManager
+    public class StorageManager : IStorageService
     {
         // Fájlnevek konstansai
         private const string DriversFile = "drivers.json";

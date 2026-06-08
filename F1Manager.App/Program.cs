@@ -10,8 +10,8 @@ namespace F1Manager.App
     /// </summary>
     class Program
     {
-        // Az adatkezelő példányosítása
-        static StorageManager storage = new StorageManager();
+        // SOLID - DIP: Interfészt használunk a konkrét osztály helyett
+        static IStorageService storage = new StorageManager();
 
         static void Main(string[] args)
         {
