@@ -27,6 +27,7 @@ namespace F1Manager.Logic
         /// </summary>
         public void LoadAll()
         {
+            Console.WriteLine($"[Storage] Betöltés innen: {Path.GetFullPath(DriversFile)}");
             Versenyzok = Load<Versenyzo>(DriversFile);
             Csapatok = Load<Csapat>(TeamsFile);
             Bajnoksagok = Load<Bajnoksag>(ChampionshipsFile);
