@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "Guid": "c1-2026",
+    "Megnevezes": "FIA Formula One World Championship",
+    "Evszam": 2026,
+    "CsapatGuids": [
+      "t1-mercedes",
+      "t2-redbull",
+      "t3-ferrari",
+      "t4-mclaren"
+    ]
+  }
+]
