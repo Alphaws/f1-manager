@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="F1Manager.App/F1Manager.App.csproj" />
+  <Project Path="F1Manager.Logic/F1Manager.Logic.csproj" />
+</Solution>
