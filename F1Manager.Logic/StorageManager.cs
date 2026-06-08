@@ -7,16 +7,19 @@ namespace F1Manager.Logic
         private const string DriversFile = "drivers.json";
         private const string TeamsFile = "teams.json";
         private const string ChampionshipsFile = "championships.json";
+        private const string ResultsFile = "results.json";
 
         public List<Versenyzo> Versenyzok { get; set; } = new();
         public List<Csapat> Csapatok { get; set; } = new();
         public List<Bajnoksag> Bajnoksagok { get; set; } = new();
+        public List<FutamEredmeny> Eredmenyek { get; set; } = new();
 
         public void LoadAll()
         {
             Versenyzok = Load<Versenyzo>(DriversFile);
             Csapatok = Load<Csapat>(TeamsFile);
             Bajnoksagok = Load<Bajnoksag>(ChampionshipsFile);
+            Eredmenyek = Load<FutamEredmeny>(ResultsFile);
         }
 
         public void SaveAll()
@@ -24,6 +27,7 @@ namespace F1Manager.Logic
             Save(DriversFile, Versenyzok);
             Save(TeamsFile, Csapatok);
             Save(ChampionshipsFile, Bajnoksagok);
+            Save(ResultsFile, Eredmenyek);
         }
 
         private List<T> Load<T>(string fileName)

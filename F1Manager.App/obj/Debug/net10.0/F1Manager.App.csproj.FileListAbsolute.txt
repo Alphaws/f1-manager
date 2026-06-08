@@ -16,3 +16,4 @@
 /home/alphaws/Dev/Projects/f1-manager/F1Manager.App/obj/Debug/net10.0/F1Manager.App.pdb
 /home/alphaws/Dev/Projects/f1-manager/F1Manager.App/obj/Debug/net10.0/F1Manager.App.genruntimeconfig.cache
 /home/alphaws/Dev/Projects/f1-manager/F1Manager.App/obj/Debug/net10.0/ref/F1Manager.App.dll
+/home/alphaws/Dev/Projects/f1-manager/F1Manager.App/obj/Debug/net10.0/F1Manager.App.sourcelink.json

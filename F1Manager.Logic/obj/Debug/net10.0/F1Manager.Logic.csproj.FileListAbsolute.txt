@@ -9,3 +9,4 @@
 /home/alphaws/Dev/Projects/f1-manager/F1Manager.Logic/obj/Debug/net10.0/refint/F1Manager.Logic.dll
 /home/alphaws/Dev/Projects/f1-manager/F1Manager.Logic/obj/Debug/net10.0/F1Manager.Logic.pdb
 /home/alphaws/Dev/Projects/f1-manager/F1Manager.Logic/obj/Debug/net10.0/ref/F1Manager.Logic.dll
+/home/alphaws/Dev/Projects/f1-manager/F1Manager.Logic/obj/Debug/net10.0/F1Manager.Logic.sourcelink.json
