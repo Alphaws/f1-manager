@@ -220,14 +220,31 @@ namespace F1Manager.App
 
         #region Private Helpers
 
+        /// <summary>
+        /// Bekér egy szöveget a felhasználótól. 
+        /// Ha üresen hagyja vagy 'ESC'-et ütne (itt most üres Enter), akkor null-al tér vissza (= Mégse).
+        /// </summary>
+        private string? PromptInput(string label)
+        {
+            Console.Write($"{label} (vagy üres Enter a megszakításhoz): ");
+            string input = Console.ReadLine();
+            return string.IsNullOrWhiteSpace(input) ? null : input.Trim();
+        }
+
         private void AddDriver()
         {
             try
             {
-                Console.Write("Név: "); string nev = Console.ReadLine();
-                Console.Write("Ország: "); string orszag = Console.ReadLine();
+                string? nev = PromptInput("Név");
+                if (nev == null) return;
+
+                string? orszag = PromptInput("Ország");
+                if (orszag == null) return;
+
                 Console.Write("Kezdő pontszám: "); 
-                int pont = int.Parse(Console.ReadLine() ?? "0");
+                string pInput = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(pInput)) return;
+                int pont = int.Parse(pInput);
                 
                 _storage.Versenyzok.Add(new Versenyzo(nev, orszag, pont));
                 Console.WriteLine("\nSikeres felvétel!");
@@ -259,40 +276,49 @@ namespace F1Manager.App
 
         private void AddTeam()
         {
-            Console.Write("Csapat neve: "); string nev = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(nev)) _storage.Csapatok.Add(new Csapat(nev));
+            string? nev = PromptInput("Csapat neve");
+            if (nev != null) _storage.Csapatok.Add(new Csapat(nev));
         }
 
         private void AssignDriverToTeam()
         {
-            Console.Write("Csapat neve: "); string csNev = Console.ReadLine();
-            var cs = _storage.Csapatok.FirstOrDefault(x => x.Nev == csNev);
+            string? csNev = PromptInput("Melyik csapatba?");
+            if (csNev == null) return;
+            var cs = _storage.Csapatok.FirstOrDefault(x => x.Nev.Equals(csNev, StringComparison.OrdinalIgnoreCase));
+            
             if (cs != null) 
             {
-                Console.Write("Versenyző neve: "); string vNev = Console.ReadLine();
-                var v = _storage.Versenyzok.FirstOrDefault(x => x.Nev == vNev);
+                string? vNev = PromptInput("Versenyző neve");
+                if (vNev == null) return;
+                var v = _storage.Versenyzok.FirstOrDefault(x => x.Nev.Equals(vNev, StringComparison.OrdinalIgnoreCase));
                 if (v != null) cs.Hozzaad(v);
             }
-            Thread.Sleep(1000);
+            else { Console.WriteLine("Nem található csapat."); Thread.Sleep(1000); }
         }
 
         private void DeleteTeam()
         {
-            Console.Write("Törlendő csapat neve: "); string nev = Console.ReadLine();
-            _storage.Csapatok.RemoveAll(x => x.Nev == nev);
+            string? nev = PromptInput("Törlendő csapat neve");
+            if (nev != null) _storage.Csapatok.RemoveAll(x => x.Nev.Equals(nev, StringComparison.OrdinalIgnoreCase));
         }
 
         private void AddChampionship()
         {
-            Console.Write("Megnevezés: "); string nev = Console.ReadLine();
-            Console.Write("Évszám: "); 
-            if (int.TryParse(Console.ReadLine(), out int ev)) _storage.Bajnoksagok.Add(new Bajnoksag(nev, ev));
+            string? nev = PromptInput("Megnevezés");
+            if (nev == null) return;
+            
+            Console.Write("Évszám: ");
+            string eInput = Console.ReadLine();
+            if (int.TryParse(eInput, out int ev)) _storage.Bajnoksagok.Add(new Bajnoksag(nev, ev));
         }
 
         private void AddResult()
         {
-            Console.Write("Futam neve: "); string nev = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(nev)) _storage.Eredmenyek.Add(new FutamEredmeny { FutamNeve = nev, Datum = DateTime.Now });
+            string? nev = PromptInput("Futam neve");
+            if (nev != null)
+            {
+                _storage.Eredmenyek.Add(new FutamEredmeny { FutamNeve = nev, Datum = DateTime.Now });
+            }
         }
 
         #endregion
