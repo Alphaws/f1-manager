@@ -23,7 +23,7 @@ namespace F1Manager.Logic
         public List<FutamEredmeny> Eredmenyek { get; set; } = new List<FutamEredmeny>();
 
         /// <summary>
-        /// Betölti az összes adatot a JSON fájlokból.
+        /// Betölti az összes adatot a JSON fájlokból és összeköti a hivatkozásokat.
         /// </summary>
         public void LoadAll()
         {
@@ -32,6 +32,25 @@ namespace F1Manager.Logic
             Csapatok = Load<Csapat>(TeamsFile);
             Bajnoksagok = Load<Bajnoksag>(ChampionshipsFile);
             Eredmenyek = Load<FutamEredmeny>(ResultsFile);
+
+            // Összekötés (Hydration): GUID alapján feltöltjük az objektum listákat
+            foreach (var cs in Csapatok)
+            {
+                foreach (var vGuid in cs.VersenyzoGuids)
+                {
+                    var v = Versenyzok.FirstOrDefault(x => x.Guid == vGuid);
+                    if (v != null) cs.Hozzaad(v);
+                }
+            }
+
+            foreach (var b in Bajnoksagok)
+            {
+                foreach (var csGuid in b.CsapatGuids)
+                {
+                    var cs = Csapatok.FirstOrDefault(x => x.Guid == csGuid);
+                    if (cs != null) b.HozzaadCsapat(cs);
+                }
+            }
         }
 
         /// <summary>

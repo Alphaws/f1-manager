@@ -1,82 +1,80 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace F1Manager.Logic
 {
     /// <summary>
     /// Egy versenyző adatait tároló osztály.
+    /// PDF Compliant: nev, orszag, pontszam adattagok.
     /// </summary>
     public class Versenyzo
     {
-        // Publikus tulajdonságok
+        // JSON azonosító (nem PDF követelmény, de a DB-hez kell)
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
-        public string Nev { get; set; }
-        public string Orszag { get; set; }
-        
-        // Privát adattag a validált pontszámhoz
+
+        // 1. nev, orszag és pontszam adattagok
+        private string nev;
+        private string orszag;
         private int pontszam;
 
+        public string Nev { get => nev; set => nev = value; }
+        public string Orszag { get => orszag; set => orszag = value; }
+
         /// <summary>
-        /// A versenyző összesített pontszáma (0-1000 között).
+        /// 7. Setter csak 0 és 500 között, egyébként F1Exception.
         /// </summary>
         public int Pontszam
         {
-            get 
-            { 
-                return pontszam; 
-            }
-            set 
+            get => pontszam;
+            set
             {
-                if (value < 0 || value > 1000)
+                if (value < 0 || value > 500)
                 {
-                    throw new F1Exception("Érvénytelen pontszám! (0 és 1000 között kell lennie)");
+                    throw new F1Exception("Érvénytelen pontszám!");
                 }
                 pontszam = value;
             }
         }
 
+        public Versenyzo() { }
+
         /// <summary>
-        /// Üres konstruktor a JSON deszerializációhoz.
+        /// 2. Konstruktor (nev, orszag, pontszam sorrendben).
+        /// 3. pontszam alapértelmezett értéke 0.
         /// </summary>
-        public Versenyzo() 
-        { 
+        public Versenyzo(string nev, string orszag, int pontszam = 0)
+        {
+            this.nev = nev;
+            this.orszag = orszag;
+            this.Pontszam = pontszam; // A settert hívjuk a validáció miatt
         }
 
         /// <summary>
-        /// Paraméteres konstruktor új versenyző létrehozásához.
+        /// 8. ToString felülírás: {nev} ({orszag}) – {pontszam} pont.
         /// </summary>
-        public Versenyzo(string nev, string orszag, int pont = 0) 
-        { 
-            this.Nev = nev; 
-            this.Orszag = orszag; 
-            this.Pontszam = pont; 
+        public override string ToString()
+        {
+            return $"{nev} ({orszag}) – {pontszam} pont";
         }
 
         /// <summary>
-        /// Szöveges megjelenítés a listákhoz.
+        /// VIZSGA KÖVETELMÉNY: Equals és GetHashCode felülírása.
         /// </summary>
-        public override string ToString() 
+        public override bool Equals(object? obj)
         {
-            return $"{Nev} ({Orszag}) - {Pontszam} pont";
-        }
-        
-        /// <summary>
-        /// Egyenlőség vizsgálata név és ország alapján.
-        /// </summary>
-        public override bool Equals(object? obj) 
-        {
-            if (obj is Versenyzo v)
+            if (obj is Versenyzo masik)
             {
-                return v.Nev == this.Nev && v.Orszag == this.Orszag;
+                return this.nev.ToLower() == masik.nev.ToLower() &&
+                       this.orszag.ToLower() == masik.orszag.ToLower();
             }
             return false;
         }
 
-        /// <summary>
-        /// Hash kód generálása az Equals-hoz.
-        /// </summary>
-        public override int GetHashCode() 
+        public override int GetHashCode()
         {
-            return HashCode.Combine(Nev, Orszag);
+            return HashCode.Combine(nev?.ToLower(), orszag?.ToLower());
         }
     }
 }
