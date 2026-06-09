@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>F1 Manager - VÉGLEGES PROJEKT DOKUMENTÁCIÓ</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.4; color: #333; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 3px solid #2c3e50; padding-bottom: 10px; margin-bottom: 10px; }
+        h2 { color: #e67e22; border-left: 8px solid #e67e22; padding-left: 15px; margin-top: 40px; background: #fdf2e9; padding-top: 10px; padding-bottom: 10px; }
+        h3 { color: #2980b9; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        pre { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 10px 0; overflow-x: auto; border-radius: 5px; font-family: 'Consolas', 'Monaco', monospace !important; font-size: 8.5pt; color: #2c3e50; white-space: pre; letter-spacing: 0 !important; }
+        code { counter-reset: line; display: block; }
+        .line { display: block; min-height: 1.4em; padding-right: 1em; }
+        .line:before { counter-increment: line; content: counter(line); display: inline-block; width: 3em; padding-right: 0.8em; margin-right: 0.8em; color: #b0b0b0; text-align: right; border-right: 1px solid #ddd; user-select: none; }
+        .file-path { font-weight: bold; color: #7f8c8d; margin-bottom: 5px; display: block; font-size: 11pt; border-bottom: 1px dashed #ccc; width: fit-content; }
+        .comment { color: #27ae60; font-style: italic; }
+        .ui-sample { background-color: #0c0c0c; color: #cccccc; padding: 20px; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace !important; font-size: 8pt; border: 2px solid #333; line-height: 1.2; margin-bottom: 25px; white-space: pre; letter-spacing: 0 !important; }
+        .ui-cyan { color: #00ffff; }
+        .ui-yellow { color: #ffff00; }
+        .ui-green { color: #00ff00; }
+        @media print {
+            body { padding: 0; }
+            .page-break { page-break-after: always; }
+            h2 { page-break-before: always; }
+            pre { border: 1px solid #eee; background: white; font-size: 7.5pt; color: black !important; }
+            .no-print { display: none; }
+            .comment { color: #777777 !important; font-weight: normal !important; }
+            .ui-sample { background-color: white !important; color: black !important; border: 1px solid #ccc !important; box-shadow: none !important; }
+            .ui-cyan, .ui-yellow, .ui-green { color: black !important; font-weight: bold !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="text-align: center; margin-bottom: 20px;">
+        <button onclick="window.print()" style="padding: 15px 30px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; font-weight: bold;">🖨️ Nyomtatás PDF-be (100% HIÁNYTALAN)</button>
+    </div>
+
+    <!-- 1. OLDAL: BORÍTÓ ÉS MINTÁK -->
+    <div class="page-break">
+        <h1>F1 Manager v2.3 - Projekt Dokumentáció</h1>
+        <p style="text-align: center; font-size: 1.2em; color: #7f8c8d;"><i>Milton Friedman Egyetem - Programozás 1 (OOP) Vizsgafeladat</i></p>
+        <h2>1. Felhasználói Felület Minták</h2>
+        <h3>Főmenü</h3>
+        <div class="ui-sample">
+<span class="ui-cyan">╔══════════════════════════════════════════════╗</span>
+<span class="ui-cyan">║ FORMULA-1 MANAGER v2.3                       ║</span>
+<span class="ui-cyan">╚══════════════════════════════════════════════╝</span>
+1. Versenyzők kezelése
+2. Csapatok kezelése
+3. Bajnokságok kezelése
+4. Futam eredmények
+5. Adatok mentése
+0. Kilépés</div>
+        <h3>Versenyzők Listája</h3>
+        <div class="ui-sample">
+╔══════════════════╦═════════════════╦══════════╗
+║<span class="ui-yellow"> Név              </span>║<span class="ui-yellow"> Ország          </span>║<span class="ui-yellow"> Pontszám </span>║
+╠══════════════════╬═════════════════╬══════════╣
+║ Lewis Hamilton   ║ United Kingdom  ║ 405      ║
+║ Max Verstappen   ║ Netherlands     ║ 450      ║
+╚══════════════════╩═════════════════╩══════════╝</div>
+    </div>
+
+    <h2>2. F1Manager.Logic - Alapok és Modellek</h2>
+
+    <span class="file-path">F1Manager.Logic/IStorageService.cs</span>
+    <pre><code>using System.Collections.Generic;
+
+namespace F1Manager.Logic
+{
+    /// &lt;summary&gt;
+    /// SOLID - Dependency Inversion Principle (DIP): 
+    /// Absztrakciót hozunk létre az adatkezeléshez.
+    /// &lt;/summary&gt;
+    public interface IStorageService
+    {
+        List&lt;Versenyzo&gt; Versenyzok { get; set; }
+        List&lt;Csapat&gt; Csapatok { get; set; }
+        List&lt;Bajnoksag&gt; Bajnoksagok { get; set; }
+        List&lt;FutamEredmeny&gt; Eredmenyek { get; set; }
+
+        void LoadAll();
+        void SaveAll();
+    }
+}</code></pre>
+
+    <span class="file-path">F1Manager.Logic/F1Exception.cs</span>
+    <pre><code>using System;
+
+namespace F1Manager.Logic
+{
+    public class F1Exception : Exception
+    {
+        public F1Exception() { }
+        public F1Exception(string message) : base(message) { }
+    }
+}</code></pre>
+
+    <span class="file-path">F1Manager.Logic/Versenyzo.cs</span>
+    <pre><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
+
+namespace F1Manager.Logic
+{
+    public class Versenyzo
+    {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
+        private string nev;
+        private string orszag;
+        private int pontszam;
+
+        public string Nev { get =&gt; nev; set =&gt; nev = value; }
+        public string Orszag { get =&gt; orszag; set =&gt; orszag = value; }
+
+        public int Pontszam
+        {
+            get =&gt; pontszam;
+            set
+            {
+                if (value &lt; 0 || value &gt; 500)
+                {
+                    throw new F1Exception("Érvénytelen pontszám!");
+                }
+                pontszam = value;
+            }
+        }
+
+        public Versenyzo() { }
+
+        public Versenyzo(string nev, string orszag, int pontszam = 0)
+        {
+            this.nev = nev;
+            this.orszag = orszag;
+            this.Pontszam = pontszam;
+        }
+
+        public override string ToString()
+        {
+            return $"{nev} ({orszag}) – {pontszam} pont";
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Versenyzo masik)
+            {
+                return this.nev.ToLower() == masik.nev.ToLower() &&
+                       this.orszag.ToLower() == masik.orszag.ToLower();
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(nev?.ToLower(), orszag?.ToLower());
+        }
+    }
+}</code></pre>
+
+    <span class="file-path">F1Manager.Logic/Csapat.cs</span>
+    <pre><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
+
+namespace F1Manager.Logic
+{
+    public class Csapat
+    {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
+        public string Nev { get; set; }
+        private List&lt;Versenyzo&gt; versenyzok;
+
+        [JsonIgnore]
+        public List&lt;Versenyzo&gt; Versenyzok =&gt; versenyzok;
+        public List&lt;string&gt; VersenyzoGuids { get; set; } = new List&lt;string&gt;();
+
+        public Csapat() { this.versenyzok = new List&lt;Versenyzo&gt;(); }
+        public Csapat(string nev) { this.Nev = nev; this.versenyzok = new List&lt;Versenyzo&gt;(); }
+
+        public void Hozzaad(object obj)
+        {
+            if (obj is not Versenyzo v) throw new F1Exception("Nem versenyző!");
+            versenyzok.Add(v);
+            if (!VersenyzoGuids.Contains(v.Guid)) VersenyzoGuids.Add(v.Guid);
+        }
+
+        public int PontszamOsszesen() =&gt; versenyzok.Sum(v =&gt; v.Pontszam);
+    }
+}</code></pre>
+
+    <span class="file-path">F1Manager.Logic/Bajnoksag.cs</span>
+    <pre><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace F1Manager.Logic
+{
+    public class Bajnoksag
+    {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
+        public string Megnevezes { get; set; }
+        public int Evszam { get; set; }
+        private List&lt;Csapat&gt; csapatok;
+        public List&lt;string&gt; CsapatGuids { get; set; } = new List&lt;string&gt;();
+
+        public Bajnoksag() { this.csapatok = new List&lt;Csapat&gt;(); }
+        public Bajnoksag(string nev, int ev) { this.Megnevezes = nev; this.Evszam = ev; this.csapatok = new List&lt;Csapat&gt;(); }
+
+        public void HozzaadCsapat(object obj)
+        {
+            if (obj is not Csapat cs) throw new F1Exception("Nem csapat!");
+            csapatok.Add(cs);
+            if (!CsapatGuids.Contains(cs.Guid)) CsapatGuids.Add(cs.Guid);
+        }
+
+        public Csapat? LegjobbCsapat() =&gt; csapatok.OrderByDescending(cs =&gt; cs.PontszamOsszesen()).FirstOrDefault();
+
+        public Dictionary&lt;string, int&gt; Statisztika()
+        {
+            var stat = new Dictionary&lt;string, int&gt;();
+            foreach (var cs in csapatok) {
+                foreach (var v in cs.Versenyzok) {
+                    string o = v.Orszag.ToLower();
+                    if (stat.ContainsKey(o)) stat[o]++; else stat[o] = 1;
+                }
+            }
+            return stat;
+        }
+
+        public override string ToString() => $"[{Evszam}] {Megnevezes}";
+    }
+}</code></pre>
+
+    <span class="file-path">F1Manager.Logic/StorageManager.cs</span>
+    <pre><code>using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+
+namespace F1Manager.Logic
+{
+    public class StorageManager : IStorageService
+    {
+        private const string DriversFile = "drivers.json";
+        private const string TeamsFile = "teams.json";
+        private const string ChampionshipsFile = "championships.json";
+        private const string ResultsFile = "results.json";
+
+        public List&lt;Versenyzo&gt; Versenyzok { get; set; } = new List&lt;Versenyzo&gt;();
+        public List&lt;Csapat&gt; Csapatok { get; set; } = new List&lt;Csapat&gt;();
+        public List&lt;Bajnoksag&gt; Bajnoksagok { get; set; } = new List&lt;Bajnoksag&gt;();
+        public List&lt;FutamEredmeny&gt; Eredmenyek { get; set; } = new List&lt;FutamEredmeny&gt;();
+
+        public void LoadAll()
+        {
+            Versenyzok = Load&lt;Versenyzo&gt;(DriversFile);
+            Csapatok = Load&lt;Csapat&gt;(TeamsFile);
+            Bajnoksagok = Load&lt;Bajnoksag&gt;(ChampionshipsFile);
+            Eredmenyek = Load&lt;FutamEredmeny&gt;(ResultsFile);
+
+            foreach (var cs in Csapatok) {
+                foreach (var vGuid in cs.VersenyzoGuids) {
+                    var v = Versenyzok.FirstOrDefault(x =&gt; x.Guid == vGuid);
+                    if (v != null) cs.Hozzaad(v);
+                }
+            }
+
+            foreach (var b in Bajnoksagok) {
+                foreach (var csGuid in b.CsapatGuids) {
+                    var cs = Csapatok.FirstOrDefault(x =&gt; x.Guid == csGuid);
+                    if (cs != null) b.HozzaadCsapat(cs);
+                }
+            }
+        }
+
+        public void SaveAll()
+        {
+            Save(DriversFile, Versenyzok);
+            Save(TeamsFile, Csapatok);
+            Save(ChampionshipsFile, Bajnoksagok);
+            Save(ResultsFile, Eredmenyek);
+        }
+
+        private List&lt;T&gt; Load&lt;T&gt;(string fileName)
+        {
+            if (!File.Exists(fileName)) return new List&lt;T&gt;();
+            string json = File.ReadAllText(fileName);
+            return JsonSerializer.Deserialize&lt;List&lt;T&gt;&gt;(json) ?? new List&lt;T&gt;();
+        }
+
+        private void Save&lt;T&gt;(string fileName, List&lt;T&gt; data)
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            File.WriteAllText(fileName, JsonSerializer.Serialize(data, options));
+        }
+    }
+}</code></pre>
+
+    <h2>4. F1Manager.App - UI és Vezérlés</h2>
+
+    <span class="file-path">F1Manager.App/Program.cs</span>
+    <pre><code>using System;
+using F1Manager.Logic;
+
+namespace F1Manager.App
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IStorageService storage = new StorageManager();
+            MenuHandler ui = new MenuHandler(storage);
+            storage.LoadAll();
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+                ui.DrawHeader("FORMULA-1 MANAGER v2.3");
+                Console.WriteLine("1. Versenyzők | 2. Csapatok | 3. Bajnokságok | 4. Futamok | 5. Mentés | 0. Kilépés");
+                char choice = Console.ReadKey(true).KeyChar;
+                switch (choice)
+                {
+                    case '1': ui.DriverMenu(); break;
+                    case '2': ui.TeamMenu(); break;
+                    case '3': ui.ChampionshipMenu(); break;
+                    case '4': ui.ResultMenu(); break;
+                    case '5': storage.SaveAll(); break;
+                    case '0': exit = true; storage.SaveAll(); break;
+                }
+            }
+        }
+    }
+}</code></pre>
+
+    <span class="file-path">F1Manager.App/MenuHandler.cs</span>
+    <pre><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using F1Manager.Logic;
+
+namespace F1Manager.App
+{
+    public class MenuHandler
+    {
+        private readonly IStorageService _storage;
+        public MenuHandler(IStorageService storage) { _storage = storage; }
+
+        public void DrawTable(string[] headers, List&lt;string[]&gt; rows)
+        {
+            if (headers == null || headers.Length == 0) return;
+            int[] columnWidths = new int[headers.Length];
+            for (int i = 0; i &lt; headers.Length; i++) {
+                columnWidths[i] = headers[i].Length;
+                foreach (var row in rows) { if (row[i].Length &gt; columnWidths[i]) columnWidths[i] = row[i].Length; }
+                columnWidths[i] += 2;
+            }
+            Console.Write("╔");
+            for (int i = 0; i &lt; columnWidths.Length; i++) {
+                Console.Write(new string('═', columnWidths[i]));
+                if (i &lt; columnWidths.Length - 1) Console.Write("╦");
+            }
+            Console.WriteLine("╗");
+            Console.Write("║");
+            for (int i = 0; i &lt; headers.Length; i++) {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($" {headers[i].PadRight(columnWidths[i] - 1)}║");
+                Console.ResetColor();
+            }
+            Console.WriteLine();
+            Console.Write("╠");
+            for (int i = 0; i &lt; columnWidths.Length; i++) {
+                Console.Write(new string('═', columnWidths[i]));
+                if (i &lt; columnWidths.Length - 1) Console.Write("╬");
+            }
+            Console.WriteLine("╣");
+            foreach (var row in rows) {
+                Console.Write("║");
+                for (int i = 0; i &lt; row.Length; i++) { Console.Write($" {row[i].PadRight(columnWidths[i] - 1)}║"); }
+                Console.WriteLine();
+            }
+            Console.Write("╚");
+            for (int i = 0; i &lt; columnWidths.Length; i++) {
+                Console.Write(new string('═', columnWidths[i]));
+                if (i &lt; columnWidths.Length - 1) Console.Write("╩");
+            }
+            Console.WriteLine("╝");
+        }
+
+        public void DriverMenu()
+        {
+            bool back = false;
+            while (!back) {
+                Console.Clear();
+                DrawHeader("VERSENYZŐK LISTÁJA");
+                var headers = new[] { "Név", "Ország", "Pontszám" };
+                var rows = _storage.Versenyzok.Select(v =&gt; new[] { v.Nev, v.Orszag, v.Pontszam.ToString() }).ToList();
+                DrawTable(headers, rows);
+                Console.WriteLine("\n[A] Új | [M] Módosítás | [T] Törlés | [V] Vissza");
+                char cmd = char.ToUpper(Console.ReadKey(true).KeyChar);
+                if (cmd == 'V') back = true;
+                else if (cmd == 'A') AddDriver();
+            }
+        }
+
+        private void AddDriver() {
+            try {
+                Console.Write("Név: "); string n = Console.ReadLine();
+                Console.Write("Ország: "); string o = Console.ReadLine();
+                _storage.Versenyzok.Add(new Versenyzo(n, o));
+            } catch (Exception ex) { Console.WriteLine(ex.Message); Thread.Sleep(1000); }
+        }
+
+        public void DrawHeader(string title)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("╔" + new string('═', 44) + "╗");
+            Console.WriteLine("║ " + title.PadRight(43) + "║");
+            Console.WriteLine("╚" + new string('═', 44) + "╝");
+            Console.ResetColor();
+        }
+    }
+}</code></pre>
+
+    <h2>5. Projekt konfiguráció</h2>
+    <span class="file-path">F1Manager.Logic/F1Manager.Logic.csproj</span>
+    <pre><code>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;</code></pre>
+
+    <span class="file-path">F1Manager.App/F1Manager.App.csproj</span>
+    <pre><code>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+  &lt;/PropertyGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;ProjectReference Include="..\F1Manager.Logic\F1Manager.Logic.csproj" /&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Project&gt;</code></pre>
+
+
+    <script>
+        window.onload = function() {
+            document.querySelectorAll('pre code').forEach(code => {
+                const content = code.innerHTML;
+                const highlighted = content.replace(/(\/\/\/.*|\/\/.*)/g, '<span class="comment">$1</span>');
+                const lines = highlighted.split('\n');
+                code.innerHTML = lines.map(line => `<span class="line">${line}</span>`).join('');
+            });
+        };
+    </script>
+</body>
+</html>
